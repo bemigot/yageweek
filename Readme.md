@@ -9,7 +9,7 @@
 To [submit **before 2026-04-11 00:59 +0400**](https://new.contest.yandex.ru/contests/90916/start)
 
 [**Tasks**](https://new.contest.yandex.ru/contests/90916/problems)
-* [ ] A. [DSA]() - [contest](https://new.contest.yandex.ru/contests/90916/problems?id=520761/2026_03_17/hKUIuGuw1A)
+* [100] A. [DSA](taskA/Readme.md) - [contest](https://new.contest.yandex.ru/contests/90916/problems?id=520761/2026_03_17/hKUIuGuw1A)
 * [ ] B. [LogReg]() - [Magic руны](https://new.contest.yandex.ru/contests/90916/problems?id=6899948/2026_03_17/MeUAwwHDum)
 * [ ] C. [??]() - [Робот jumps](https://new.contest.yandex.ru/contests/90916/problems?id=1954196/2026_03_17/3bCgzc8lpm)
 * [ ] D. t.b.d.
