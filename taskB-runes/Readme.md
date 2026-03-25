@@ -17,3 +17,9 @@ In this task "rune" is a sequence of symbols:
 - Train on all 170 labeled runes (no internal split) — dataset is too small to waste samples on validation, and test_runes.csv is the real target
 - use only NumPy - for running on my Iris Xe notebook ( `conda activate idp` -  Python 3.12 / numpy 2.2 / matplotlib 3.10)
 - use [`example/deep.py`](example/deep.py) and [`example/dnn_app_utils_v3.py`](example/dnn_app_utils_v3.py) ideas
+
+## Try 2: 1+3 layer net
+- Input: one-hot encode each position (15) + 36 bigrams
+- Architecture [51, 15, 5, 1]
+- 20x smaller Learning Rate, 6x more iterations
+- on 73-samples test_set: 3 negatives (0 - no-spell) -> 3 postives - 100% success
