@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-import sys
 import numpy as np
 
-sys.path.insert(0, 'example')
-from dnn_app_utils_v3 import (
+from example.dnn_app_utils_v3 import (
     initialize_parameters_deep,
     L_model_forward,
     compute_cost,

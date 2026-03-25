@@ -1,3 +1,5 @@
+from typing import Dict
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -21,7 +23,7 @@ def sigmoid(Z):
 
 def relu(Z):
     """
-    Implement the RELU function.
+    Implement the ReLU function.
 
     Arguments:
     Z -- Output of the linear layer, of any shape
@@ -82,18 +84,21 @@ def sigmoid_backward(dA, cache):
     
     return dZ
 
+"""dummy function faking hd5py.File() interface"""
+def fromCSV(file_path) -> Dict:
+    raise NotImplemented
 
 def load_data():
-    train_dataset = File('datasets/train.csv', "r")
-    train_set_x_orig = np.array(train_dataset["train_set_x"][:]) # your train set features
-    train_set_y_orig = np.array(train_dataset["train_set_y"][:]) # your train set labels
+    train_dataset: Dict = fromCSV('datasets/train.csv')
+    train_set_x_orig = np.array(train_dataset["x"][:]) # your train set features
+    train_set_y_orig = np.array(train_dataset["y"][:]) # your train set labels
 
-    test_dataset = File('datasets/test.csv', "r")
-    test_set_x_orig = np.array(test_dataset["test_set_x"][:]) # your test set features
-    test_set_y_orig = np.array(test_dataset["test_set_y"][:]) # your test set labels
+    test_dataset = fromCSV('datasets/test.csv')
+    test_set_x_orig = np.array(test_dataset["x"][:]) # your test set features
+    test_set_y_orig = np.array(test_dataset["y"][:]) # your test set labels
 
     classes = np.array(test_dataset["list_classes"][:]) # the list of classes
-    
+
     train_set_y_orig = train_set_y_orig.reshape((1, train_set_y_orig.shape[0]))
     test_set_y_orig = test_set_y_orig.reshape((1, test_set_y_orig.shape[0]))
     
@@ -389,7 +394,7 @@ def update_parameters(parameters, grads, learning_rate):
 
 def predict(X, y, parameters):
     """
-    This function is used to predict the results of a  L-layer neural network.
+    This function is used to predict the results of an L-layer neural network.
     
     Arguments:
     X -- data set of examples you would like to label
