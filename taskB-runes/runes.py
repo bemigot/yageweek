@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import numpy as np
 
+from example.common import load_labeled, load_unlabeled
 from example.dnn_app_utils_v3 import (
     initialize_parameters_deep,
     L_model_forward,
@@ -9,48 +10,13 @@ from example.dnn_app_utils_v3 import (
     update_parameters,
 )
 
-SYMBOLS = {'F': 0, 'W': 1, 'E': 2}
-
-def encode(rune):
-    """One-hot encode positions (15) + consecutive bigrams (36) -> 51-element vector."""
-    # 15: individual positions
-    pos = np.zeros(15)
-    for i, ch in enumerate(rune):
-        pos[i * 3 + SYMBOLS[ch]] = 1.0
-    # 36: consecutive pairs at positions (0,1),(1,2),(2,3),(3,4)
-    bi = np.zeros(36)
-    for i in range(4):
-        a, b = SYMBOLS[rune[i]], SYMBOLS[rune[i + 1]]
-        bi[i * 9 + a * 3 + b] = 1.0
-    return np.concatenate([pos, bi])
-
 def load_train(path):
-    runes, labels = [], []
-    with open(path) as f:
-        next(f)
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            rune, label = line.split(',')
-            runes.append(encode(rune))
-            labels.append(int(label))
-    X = np.array(runes).T            # (51, m)
-    Y = np.array(labels).reshape(1, -1)
-    return X, Y
+    runes, labels = load_labeled(path)
+    return np.array(runes).T, np.array(labels).reshape(1, -1)  # (51, m), (1, m)
 
 def load_test(path):
-    runes, names = [], []
-    with open(path) as f:
-        next(f)
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            runes.append(encode(line))
-            names.append(line)
-    X = np.array(runes).T            # (51, m)
-    return X, names
+    runes, names = load_unlabeled(path)
+    return np.array(runes).T, names  # (51, m)
 
 def train(X, Y, layers_dims, seed, learning_rate, num_iterations, print_every=1000):
     parameters = initialize_parameters_deep(layers_dims, seed=seed)
