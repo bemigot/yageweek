@@ -1,24 +1,32 @@
-# Minimize sum of moduli
+## **Minimize Sum of Absolute Differences**
 
-Goal from a n-by-m matrix of non-negative integers, choose one number
-*a* from each row, and put them in a sequence, so that sum of
-absolute differences between neighboring members is at the minimum.
+**Goal**
+Given an $n \times m$ matrix of non-negative integers, select exactly one
+integer from each row. Let this collection of $n$ integers be your set.
+Your objective is to choose the set such that, when its elements are arranged
+in an optimal order, the sum of absolute differences between adjacent members
+is minimized.
 
-$|a_2 - a_1| + |a_3 -a_2| + \dots + |a_n - a_n-1|$
+Specifically, if your chosen numbers are
+$\{a_1, a_2, \dots, a_n\}$, you want to minimize:
+$$\min_{\text{permutations } \sigma} \sum_{i=1}^{n-1} |a_{\sigma(i+1)} - a_{\sigma(i)}|$$
 
-Print the chosen numbers $a_1, a_2, \dots, a_n$
+*(Note: This sum is minimized when the chosen numbers are arranged in
+ascending order, reducing the formula to $\max(a_i) - \min(a_i)$.)*
 
-If there are multiple sequences satisfying the minimum condition,
-print the one with the minimum sum of those numbers.
+**Tie-breaking Rule**
+If multiple sets yield the same minimum sum of absolute differences,
+choose the set that has the **minimum total sum** of its elements ($\sum a_i$).
 
 **Input**
-* **Line 1:** Two integers $n$ and $m$ ($1 \le n * m \le 10^5$), $n$ -
-  number of rows, $m$ - numbers in a row
-* **Line 2..$n+1$**: $m$ integers $a_i$ ($1 \le a_i \le 10^9$)
+* **Line 1**: Two integers $n$ and $m$ ($1 \le n \times m \le 10^5$),
+  where $n$ is the number of rows and $m$ is the number of elements per row.
+* **Lines 2 to $n+1$**: $m$ integers representing the elements of each row.
 
-**Output**: sorted sequence of numbers, separated by space.
+**Output**
+* Print the $n$ chosen numbers in **ascending order**, separated by spaces.
 
-**Example Input**:
+**Example Input**
 ```
 3 2
 2 2
@@ -26,5 +34,7 @@ print the one with the minimum sum of those numbers.
 99 1
 ```
 
-**Example Output**: `1 2 6`
-      
+**Example Output**
+```
+1 2 6
+```
