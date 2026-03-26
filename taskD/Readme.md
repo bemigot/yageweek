@@ -51,3 +51,33 @@ choose the set that has the **minimum total sum** of its elements ($\sum a_i$).
   approach, and shrink the window, just keeping eye on having at least
   one of each "color". That probably warrants adding a vector
   of counters for each row ("color") representatives in a "window".
+
+## Review
+
+**Standalone min-sum (ignoring diff):**
+Trivial — just pick the minimum element from each row.
+Sum = $\sum \min(\text{row}_i)$.
+
+**How the tie-break integrates with the sliding window:**
+
+Each valid window $[L, R]$ in the sorted flat array
+(containing $\ge 1$ element per row) represents a candidate solution.
+For that window, the best possible sum is achieved by picking
+the **smallest element of each row within the window** — which is
+its leftmost occurrence in the sorted array.
+
+So for each valid window we track two costs lexicographically:
+* $\text{range} = \text{arr}[R] - \text{arr}[L]$ — the primary diff cost
+* $\text{sum} = \sum (\text{leftmost element of each row in current window})$ — the tie-break cost
+
+**Maintaining sum incrementally:**
+When the left pointer $L$ advances past a row's element, that row's
+representative shifts to the next element in the window.
+The sum increases by exactly that difference.
+This keeps the update O(1) per step.
+
+**Combined algorithm:** slide the window, maintain
+$(\text{range}, \text{sum})$ for each valid window, and track
+the global minimum pair lexicographically.
+
+This remains $O(N \log N)$ overall — the tie-break adds no extra complexity.
