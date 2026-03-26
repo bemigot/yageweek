@@ -21,7 +21,7 @@ choose the set that has the **minimum total sum** of its elements ($\sum a_i$).
 **Input**
 * **Line 1**: Two integers $n$ and $m$ ($1 \le n \times m \le 10^5$),
   where $n$ is the number of rows and $m$ is the number of elements per row.
-* **Lines 2 to $n+1$**: $m$ integers representing the elements of each row.
+* **Lines 2 to $n+1$**: $m$ integers ($1 \le p_i \le 10^9$) representing the elements of each row.
 
 **Output**
 * Print the $n$ chosen numbers in **ascending order**, separated by spaces.
@@ -38,3 +38,16 @@ choose the set that has the **minimum total sum** of its elements ($\sum a_i$).
 ```
 1 2 6
 ```
+
+## Ideas
+* Since we are free to reorder row "representatives", i.e. treat them
+  as a *set* (where you pick the numbers and then arrange them),
+  the minimum sum of absolute differences is always achieved by sorting those
+  numbers in ascending order.
+* Moreover, by sorting them in ascending order, we can calculate the target
+  metric as $a_n - a_1$.
+* We can flatten this matrix: put all numbers in a single row, though we should  keep track of their origin row - the "color".
+* As soon as all numbers are arranged in order, we can apply "sliding windows"
+  approach, and shrink the window, just keeping eye on having at least
+  one of each "color". That probably warrants adding a vector
+  of counters for each row ("color") representatives in a "window".
