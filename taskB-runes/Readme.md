@@ -21,7 +21,9 @@ In this task "rune" is a sequence of symbols:
 | Env                                                                        | Time real/user    |
 |----------------------------------------------------------------------------|-------------------|
 | Ryzen 5 3600 3.6-4.2 GHz / Python 3.12 - NumPy 1.26 (Ubuntu 24.04 default) | 11,417s / 11,388s |
-| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / Python 3.12 - NumPy 2.2 [idp]    |  3,445s /  3,725s |
+| Ryzen 5 3600 3.6-4.2 GHz /                Python 3.12 - NumPy 2.4.4 (PyPi) |  4,750s /  5,539s |
+| i5-1135G7 2.4-4.2 GHz / --------------- / Python 3.12 - NumPy 2.4.4 (PyPi) |  3.196s /  3.492s |
+| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / Python 3.12 - NumPy 2.3.2 [idp]  |  4.309s / 15.676s |
 
 [idp](https://www.intel.com/content/www/us/en/developer/articles/technical/get-started-with-intel-distribution-for-python.html)
 
