@@ -1,1 +1,1 @@
-java/Sol1.java
+../java/Sol1.java

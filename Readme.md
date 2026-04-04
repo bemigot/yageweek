@@ -12,4 +12,4 @@ To [submit **before 2026-04-11 00:59 +0400**](https://new.contest.yandex.ru/cont
 * [100] A. [DSA](taskA/Readme.md) - [contest](https://new.contest.yandex.ru/contests/90916/problems?id=520761/2026_03_17/hKUIuGuw1A)
 * [100] B. [LogReg](taskB-runes/Readme.md) - [Magic руны](https://new.contest.yandex.ru/contests/90916/problems?id=6899948/2026_03_17/MeUAwwHDum)
 * [100] C. [DP](taskC-robot/Readme.md) - [Робот jumps](https://new.contest.yandex.ru/contests/90916/problems?id=1954196/2026_03_17/3bCgzc8lpm)
-* [100] D. [t.b.d](taskD/Readme.md) - [Min moduli sum](https://new.contest.yandex.ru/contests/90916/problems?id=1954196/2026_03_17/vaWY1AoQRB)
+* [100] D. [sliding window, 2 criteria](taskD/Readme.md) - [Min moduli sum](https://new.contest.yandex.ru/contests/90916/problems?id=1954196/2026_03_17/vaWY1AoQRB)
