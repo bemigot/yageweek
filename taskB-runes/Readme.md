@@ -15,8 +15,15 @@ In this task "rune" is a sequence of symbols:
 - Input: one-hot encode each position → 15 input neurons (5 positions × 3 symbols)
 - Architecture: `[15 → 5 → 1]` — fully connected hidden layer with ReLU, sigmoid output; bump hidden neurons if accuracy is low
 - Train on all 170 labeled runes (no internal split) — dataset is too small to waste samples on validation, and test_runes.csv is the real target
-- use only NumPy - for running on my Iris Xe notebook ( `conda activate idp` -  Python 3.12 / numpy 2.2)
+- use only NumPy
 - use [`example/deep.py`](example/deep.py) and [`example/dnn_app_utils_v3.py`](example/dnn_app_utils_v3.py) ideas
+
+| Env                                                                        | Time real/user    |
+|----------------------------------------------------------------------------|-------------------|
+| Ryzen 5 3600 3.6-4.2 GHz / Python 3.12 - NumPy 1.26 (Ubuntu 24.04 default) | 11,417s / 11,388s |
+| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / Python 3.12 - NumPy 2.2 [idp]    |  3,445s /  3,725s |
+
+[idp](https://www.intel.com/content/www/us/en/developer/articles/technical/get-started-with-intel-distribution-for-python.html)
 
 ## Try 2: 1+3 layer net
 - Input: one-hot encode each position (15) + 36 bigrams

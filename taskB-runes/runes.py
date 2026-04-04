@@ -42,7 +42,7 @@ X_test, test_names = load_test('test_runes.csv')
 
 m = X_train.shape[1]
 n_spell = int(Y_train.sum())
-print(f"Training on {m} runes  ({n_spell} spells, {m - n_spell} non-spells)")
+print(f"Training on {m} runes  ({n_spell} spells, {m - n_spell} non-spells) using NumPy {np.__version__}")
 print(f"Input features: {X_train.shape[0]}  (15 positional + 36 bigram)")
 
 layers_dims = [51, 15, 5, 1]
