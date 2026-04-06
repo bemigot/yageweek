@@ -18,17 +18,28 @@ In this task "rune" is a sequence of symbols:
 - use only NumPy
 - use [`example/deep.py`](example/deep.py) and [`example/dnn_app_utils_v3.py`](example/dnn_app_utils_v3.py) ideas
 
-| Env                                                                        | Time real/user    |
-|----------------------------------------------------------------------------|-------------------|
-| Ryzen 5 3600 3.6-4.2 GHz / Python 3.12 - NumPy 1.26 (Ubuntu 24.04 default) | 11,417s / 11,388s |
-| Ryzen 5 3600 3.6-4.2 GHz /                Python 3.12 - NumPy 2.4.4 (PyPi) |  4,750s /  5,539s |
-| i5-1135G7 2.4-4.2 GHz / --------------- / Python 3.12 - NumPy 2.4.4 (PyPi) |  3.196s /  3.492s |
-| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / Python 3.12 - NumPy 2.3.2 [idp]  |  4.309s / 15.676s |
-
-[idp](https://www.intel.com/content/www/us/en/developer/articles/technical/get-started-with-intel-distribution-for-python.html)
-
 ## Try 2: 1+3 layer net
 - Input: one-hot encode each position (15) + 36 bigrams
 - Architecture [51, 15, 5, 1]
 - 20x smaller Learning Rate, 6x more iterations
 - on 73-samples test_set: 3 negatives (0 - no-spell) -> 3 positives - 100% success
+- [`runes-kit`](runes-kit.py) - same net, using `scikit-learn`
+
+| Env                                                                        | Time real/user    |
+|----------------------------------------------------------------------------|-------------------|
+| Ryzen 5 3600 3.6-4.2 GHz / Python 3.12 - NumPy 1.26 (Ubuntu 24.04 default) | 11,417s / 11,388s |
+| Ryzen 5 3600 3.6-4.2 GHz /                Python 3.12 - NumPy 2.4.4 (PyPi) |  4,750s /  5,539s |
+| i5-1135G7 2.4-4.2 GHz / --------------- / Python 3.12 - NumPy 2.4.4 (PyPi) |  3.196s /  3.492s |
+| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / Python 3.12 - NumPy 2.3.2  [idp] |  4.309s / 15.676s |
+| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / Python 3.12 - scikit-learn [idp] |  2.054s /  2.152s |
+
+[idp](https://www.intel.com/content/www/us/en/developer/articles/technical/get-started-with-intel-distribution-for-python.html)
+```
+which python  # ~/.conda/envs/idp/bin/python
+python -V     # Python 3.12.12
+
+numpy                        2.3.2    https://software.repos.intel.com/python/conda
+scikit-learn                 1.8.0    conda-forge
+scikit-learn-intelex         2025.9.0 https://software.repos.intel.com/python/conda
+scipy                        1.16.3   https://software.repos.intel.com/python/conda
+```
