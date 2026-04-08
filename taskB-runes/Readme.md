@@ -47,3 +47,39 @@ scipy                        1.16.3   https://software.repos.intel.com/python/co
 ## Try 3: Rule extraction experiment
 * using [CatBoost](https://catboost.ai) - see [CatBoost-Readme](CatBoost-Readme.md)
 * without CatBoost - see [rule-extraction](rule-extraction-Readme.md)
+
+## Try 4: Architecture sweep — finding the minimal accurate net
+
+`runes-arch-sweep.py` sweeps two axes: input feature set and hidden layer sizes,
+keeping all other hyperparameters identical to Try 2 (relu, adam, lr=0.005, 5000 iter,
+seed=1).
+
+| Architecture     | Input              | train  | answers.csv     |
+|------------------|--------------------|--------|-----------------|
+| `[51→15→5→1]`    | pos + bigrams (51) | 100.0% | 100.0% — 73/73  |
+| `[51→5→1]`       | pos + bigrams (51) | 100.0% | **100.0% — 73/73** |
+| `[51→1]` linear  | pos + bigrams (51) |  99.4% | 94.5%  — 69/73  |
+| `[36→5→1]`       | bigrams only (36)  | 100.0% | **100.0% — 73/73** |
+| `[36→1]` linear  | bigrams only (36)  |  99.4% | 94.5%  — 69/73  |
+| `[15→36→1]`      | pos only (15)      | 100.0% | 98.6%  — 72/73  |
+| `[15→15→1]`      | pos only (15)      | 100.0% | 97.3%  — 71/73  |
+| `[15→5→1]`       | pos only (15)      | 100.0% | 97.3%  — 71/73  |
+
+**Conclusions:**
+
+- **The 15-node middle layer in Try 2 is redundant** — `[51→5→1]` achieves 100%.
+- **Positional one-hots are redundant once bigrams are present** — `[36→5→1]` achieves
+  100% on bigrams alone; all inter-position signal is already captured by the 4 consecutive
+  bigrams.
+- **One hidden layer is necessary** — both linear models (`[51→1]`, `[36→1]`) top out at
+  94.5%, confirming the rule is not linearly separable.
+- **A wide hidden layer cannot compensate for missing bigrams** — `[15→36→1]` reaches
+  only 98.6% (1 error), falling short of the 3 positional-only failures in Try 1 but not
+  recovering all of them.
+- **Minimal accurate architecture: `[36→5→1]`** — 36 bigram inputs, 5 hidden neurons,
+  1 output.
+
+| Env / scikit-learn / net                                    | Time real/user  |
+| ----------------------------------------------------------- | --------------- |
+| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / idp / `51-15-5-1` | 2.054s / 2.152s |
+| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / idp / `36-5-1`    | 1.636s / 1.783s |
