@@ -1,0 +1,40 @@
+conda search -c conda-forge catboost | grep cpu | grep py312
+
+...
+catboost 1.2.8  cpu_py312h7bd933d_0  pkgs/main
+...
+catboost 1.2.9  cpu_py312h7deb4af_0  conda-forge
+catboost 1.2.10 cpu_py312h7deb4af_0  conda-forge
+
+conda install -n idp -c conda-forge catboost=1.2.10=cpu_py312h7deb4af_0
+The following packages will be downloaded:
+
+ package                 | build
+ ------------------------|------
+ xorg-libxinerama-1.1.6  |   ...     14 KB  conda-forge
+ hicolor-icon-theme-0.17 |   ...     17 KB  conda-forge
+ libglx-devel-1.7.0      |   ...     26 KB  conda-forge
+ libegl-devel-1.7.0      |   ...     30 KB  conda-forge
+ python-graphviz-0.21    |   ...     38 KB  conda-forge
+ libgl-devel-1.7.0       |   ...    111 KB  conda-forge
+ libgd-2.3.3             |   ...    173 KB  conda-forge
+ glib-tools-2.86.4       |   ...    210 KB  conda-forge
+ narwhals-2.19.0         |   ...    275 KB  conda-forge
+ gts-0.7.6               |   ...    311 KB  conda-forge
+ at-spi2-atk-2.38.0      |   ...    332 KB  conda-forge
+ atk-1.0-2.38.0          |   ...    348 KB  conda-forge
+ epoxy-1.5.10            |   ...    402 KB  conda-forge
+ pango-1.56.4            |   ...    447 KB  conda-forge
+ xorg-xorgproto-2025.1   |   ...    557 KB  conda-forge
+ gdk-pixbuf-2.44.5       |   ...    562 KB  conda-forge
+ adwaita-icon-theme-49.0 |   ...    617 KB  conda-forge
+ at-spi2-core-2.40.3     |   ...    643 KB  conda-forge
+ graphviz-14.1.2         |   ...  2,300 KB  conda-forge
+ librsvg-2.62.1          |   ...  3,300 KB  conda-forge
+ plotly-6.6.0            |   ...  5,000 KB  conda-forge
+ gtk3-3.24.52            |   ...  5,700 KB  conda-forge
+ pandas-3.0.2            |   ... 14,200 KB  conda-forge
+ catboost-1.2.10         | cpu..  9,000 KB  conda-forge
+ openssl-3.6.2           |   ...  3,000 KB  conda-forge
+ -----------------------------------------------
+                           Total:  47.5 MB
