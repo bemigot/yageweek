@@ -43,3 +43,6 @@ scikit-learn                 1.8.0    conda-forge
 scikit-learn-intelex         2025.9.0 https://software.repos.intel.com/python/conda
 scipy                        1.16.3   https://software.repos.intel.com/python/conda
 ```
+
+## Try 3: Rule extraction experiment
+* using [CatBoost](https://catboost.ai) - see [CatBoost-Readme](CatBoost-Readme.md)
