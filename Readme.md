@@ -14,3 +14,19 @@
     * [slides](day1/Tools_MCP.pdf)
     * [notebook](day1/Tools_MCP.ipynb)
     * [source: Yandex Disk](https://disk.yandex.ru/d/UYvdXggOw8bNtA)
+* Day 2 **Кирилл Мищенко**, Head of the ML Development Group at Yandex Browser
+    * [YT - Memory and Guardrails in LLM-Powered Agents](https://www.youtube.com/live/iJGh5cBSReo)
+      * agenda:
+        - purpose of memory and its different types;
+        - RAG and learning as a technique for memorizing information, as well as *context* management strategies;
+        - importance of Guardrails, the Threat Model, content filters and action limiters, tools for Guardrails implemention, and a word on monitoring.
+      * [lecture notes (ru)](day2/Memory_Guardrails.ru.md)
+      * [slides](day2/Memory_Guardrails.pdf) - [Yandex Disk](https://disk.yandex.ru/d/vWyED4WOXEC07A)
+    * [YT - Notebook walk-through](https://www.youtube.com/live/JEFiiM9C_po)
+      * agenda:
+        - сделаем базовую версию агента, который работает с авиабилетами;
+        - добавим долгосрочную и краткосрочную память;
+        - реализуем поиск политик и RAG, улучшение ответа через трансформацию запроса методом HyDE;
+        - добавим Guardrails;
+        - добавим бронирование с подтверждением от оператора.
+    * [notebook](day2/Memory_Guardrails.ipynb) - [Yandex Disk](https://disk.yandex.ru/d/LbxlAz6BLxJLUA)
