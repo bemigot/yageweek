@@ -46,3 +46,4 @@ scipy                        1.16.3   https://software.repos.intel.com/python/co
 
 ## Try 3: Rule extraction experiment
 * using [CatBoost](https://catboost.ai) - see [CatBoost-Readme](CatBoost-Readme.md)
+* without CatBoost - see [rule-extraction](rule-extraction-Readme.md)
