@@ -11,19 +11,19 @@ In this task "rune" is a sequence of symbols:
 
 **Output** answers.csv - test_runes + predictions (column `spell`, where 1 - valid spell)
 
-## Try 1+2 layer net - 3 false-negatives
+## Try 1: 1-hidden-layer net — scored 93 pts (3 false negatives found in retrospect)
 - Input: one-hot encode each position → 15 input neurons (5 positions × 3 symbols)
-- Architecture: `[15 → 5 → 1]` — fully connected hidden layer with ReLU, sigmoid output; bump hidden neurons if accuracy is low
-- Train on all 170 labeled runes (no internal split) — dataset is too small to waste samples on validation, and test_runes.csv is the real target
-- use only NumPy
-- use [`example/deep.py`](example/deep.py) and [`example/dnn_app_utils_v3.py`](example/dnn_app_utils_v3.py) ideas
+- Architecture: `[15 → 5 → 1]` — fully connected hidden layer with ReLU, sigmoid output
+- Train on all 170 labeled runes (no internal split) — dataset is too small to waste samples on validation
+- NumPy only; modelled on [`example/deep.py`](example/deep.py) and [`example/dnn_app_utils_v3.py`](example/dnn_app_utils_v3.py)
+- Submitted; scored 93/100. Try 2 later revealed 3 false negatives — each worth −2 pts (6 pts total)
 
-## Try 2: 1+3 layer net
-- Input: one-hot encode each position (15) + 36 bigrams
-- Architecture [51, 15, 5, 1]
-- 20x smaller Learning Rate, 6x more iterations
-- on 73-samples test_set: 3 negatives (0 - no-spell) -> 3 positives - 100% success
-- [`runes-kit`](runes-kit.py) - same net, using `scikit-learn`
+## Try 2: 3-hidden-layer net — 100% (corrected all 3 misclassifications)
+- Input: one-hot encode each position (15) + 36 bigrams → 51 inputs
+- Architecture: `[51 → 15 → 5 → 1]`
+- 20× smaller learning rate, 6× more iterations
+- Correctly classified the 3 runes Try 1 missed (false negatives); 100% on 73-sample test set
+- [`runes-kit.py`](runes-kit.py) — same architecture reimplemented with `scikit-learn`
 
 | Env                                                                        | Time real/user    |
 |----------------------------------------------------------------------------|-------------------|
