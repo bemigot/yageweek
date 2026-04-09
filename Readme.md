@@ -30,3 +30,19 @@
         - добавим Guardrails;
         - добавим бронирование с подтверждением от оператора.
     * [notebook](day2/Memory_Guardrails.ipynb) - [Yandex Disk](https://disk.yandex.ru/d/LbxlAz6BLxJLUA)
+* Day 3 **Софья Проскурина**, платформа внутренних ИИ‑агентов и агенты, оптимизирующие разработку в Яндекс Лавке
+    * [YT - AI Agent Workflow. Multi-Agent Systems. Multimodality](https://www.youtube.com/live/_gdXItwkhUE)
+      * agenda:
+        - поговорим, как агент думает; TAO-цикл, особенности его шагов;
+        - архитектуры и подходы Multi-Agent Systems (MAS);
+        - обзор мультимодальности.
+      * [lecture notes (ru)](day3/Agent.Workflow_MAS_Multimodality.ru.md)
+      * [slides](day3/Agent.Workflow_MAS_Multimodality.pdf) - [Yandex Disk](https://disk.yandex.ru/d/us-Ut9B-TCdE0g)
+    * [YT - Notebook walk-through](https://www.youtube.com/live/s4BfSnWwAQE)
+      * agenda:
+        - рассмотрим agent workflow и MAS;
+        - TAO-цикл;
+        - ReAct-агент;
+        - рассмотрим иерархическую мультиагентную систему и добавим в неё критика;
+        - сравним разные подходы.
+      * [notebook](day3/Agent.Workflow_MAS.ipynb) - [Yandex Disk](https://disk.yandex.ru/d/DtUkSvoi3XzBEQ)
