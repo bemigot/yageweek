@@ -46,6 +46,7 @@
       - ReAct-агент;
       - рассмотрим иерархическую мультиагентную систему и добавим в неё критика;
       - сравним разные подходы.
+    * [lecture notes (ru)](day4/Agent.Evaluation_Quality.md)
     * [notebook](day3/Agent.Workflow_MAS.ipynb) - [Yandex Disk](https://disk.yandex.ru/d/DtUkSvoi3XzBEQ)
 * Day 4 **Сергей Купцов**, развивает агентные решения в Алисе и Умных устройствах
   * [YT - Agent Evaluation: From Metrics to Managed Quality](https://www.youtube.com/live/RqM3G3STkGE)
