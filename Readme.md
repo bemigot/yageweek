@@ -51,3 +51,11 @@
   * [YT - Agent Evaluation: From Metrics to Managed Quality](https://www.youtube.com/live/RqM3G3STkGE)
     * agenda: поговорим о качестве в широком смысле и о понятии Evaluation
     * [slides](day4/Agent.Evaluation_Quality.pdf) - [Yandex Disk](https://disk.yandex.ru/d/BWBgQPk6j4qr_Q)
+  * [YT - Notebook walk-through](https://www.youtube.com/live/VYEX17iibkQ)
+    * agenda:
+      - соберем корзину;
+      - определимся с критериями и грейдерами;
+      - подключим железного пользователя;
+      - сделаем вручную golden-разметку;
+      - итеративно улучшим LLM-судью для более высокого качества.
+    * [notebook](day4/Evals.ipynb) - [Yandex Disk](https://disk.yandex.ru/d/AqWnepq1PW9WKg)
