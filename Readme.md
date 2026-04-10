@@ -60,3 +60,10 @@
       - сделаем вручную golden-разметку;
       - итеративно улучшим LLM-судью для более высокого качества.
     * [notebook](day4/Evals.ipynb) - [Yandex Disk](https://disk.yandex.ru/d/AqWnepq1PW9WKg)
+* Day 5 **Даниил Артамонов**, отвечает за платформу внутренних ИИ‑агентов и самих агентов, ускоряющих разработку, тестирование и запуск проектов в Яндекс Лавке
+  * [YT - Production Engineering for LLM Agents](https://www.youtube.com/live/sNemTIFlz08)
+    * agenda: поговорим о том, как развивать прототип до рабочей модели, которой пользуются сотни и тысячи пользователей, и о безопасности.
+    * [slides](day5/Agents-in-Prod1.pdf)  - [Yandex Disk](https://disk.yandex.ru/d/XIBBCAr6f-SS6w)
+  * [YT - Production Engineering for LLM Agents. Course summary.](https://www.youtube.com/live/UxgjgvI_wKY)
+    * agenda: завершим разговор о внедрении агента в *prod* и подведем итог по теме интенсива.
+    * [slides](day5/Agents-in-Prod2.pdf)  - [Yandex Disk](https://disk.yandex.ru/d/N2INXh0naUQcyw)
