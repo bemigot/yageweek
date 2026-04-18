@@ -35,3 +35,22 @@ Use the same model when developing and testing your solutions - this way
 the agent's behavior during grading will match what you observe locally.
 
 Look for problem statement and instructions inside the [notebook](submission.ipynb).
+
+### Submitting a Solution (Cell 3)
+
+Submitting a solution consists of three steps: commit, push, and check.
+
+1. Commit
+   - Open the **Git** tab on the left sidebar in JupyterLab.
+   - Stage the required files by clicking the "+" icon next to each one.
+   - Enter a *commit message*.
+   - Click the "Commit" button
+2. Push: Click the "Push committed changes" button (cloud icon with an upward arrow).
+   The commit will be sent to the repository linked to the task.
+   Each task and its corresponding directory has its own repository.
+3. Check:
+   - Return to the task interface in Contest.
+     [1](https://new.contest.yandex.ru/contests/90998/problems?id=526723%2F2026_03_31%2FIoQp5Crbc3)
+   - Click the "Check" button. The interface will display the latest commit to be
+     submitted for checking. Submitting the same commit twice is not possible.
+   - Confirm the commit check.
