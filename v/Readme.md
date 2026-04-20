@@ -5,7 +5,7 @@
 In this homework you will build agents for a small online electronics store
 (headphones, earbuds, keyboards, mice, and e-readers).
 
-There are three tasks [i.e. notebooks], each introducing a new architecture:
+There are three tasks, each introducing a new architecture:
 
 1. Tool-Calling Agent (*ReAct* loop) - the model searches products and manages
    a shopping cart by calling tools in an iterative ReAct loop. You will write
@@ -34,5 +34,4 @@ Important: all submissions are graded using the `gpt-oss-20b` model.
 Use the same model when developing and testing your solutions - this way
 the agent's behavior during grading will match what you observe locally.
 
-Look for problem statement and instructions inside the notebook.
-Notebook you can find inside Jupyter server in the first task.
+Look for problem statement and instructions inside the [notebook](submission.ipynb).
