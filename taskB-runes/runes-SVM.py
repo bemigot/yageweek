@@ -1,15 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 
 # Originally:
 # https://github.com/EvgeniyKorovin1/AgentsWeek-TaskSolutions/blob/1974a63162cd9884a794b236c9f529c3e2b58d9e/Tasks/Task_02/Solution_WithExplanation.ipynb
 
 # **Магические руны Элдории**
-# 
 # В этой задаче нужно определить, какие 5-символьные последовательности из символов `F`, `W` и `E` являются валидными заклинаниями.
 # 
-# На первый взгляд задача выглядит очень простой:
-# 
+# На первый взгляд задача выглядит простой:
 # - алфавит маленький;
 # - длина строки фиксирована;
 # - объектов немного.
@@ -17,16 +15,13 @@
 # Но именно такие задачи часто оказываются нетривиальными:  
 # модель должна не просто “видеть буквы”, а уловить скрытые закономерности между их позициями и сочетаниями.
 # 
-
-# ## **Почему эта задача вызвала споры**
+# **Почему эта задача вызвала споры**
 # 
 # Во время разбора задачи у участников возникли два лагеря:
-# 
 # - одни использовали бустинги и получали примерно 95–97 баллов;
 # - другие писали, что SVM даёт 100 баллов.
 # 
 # Это хороший пример того, что не существует “всемогущей” модели, которая всегда лучше остальных.
-# 
 # Для маленькой дискретной задачи с короткими строками и хорошо сконструированными признаками метод опорных векторов может оказаться сильнее популярных ансамблей деревьев.
 # 
 # В этом ноутбуке разобраны два подхода:
@@ -50,10 +45,6 @@
 #    Сколько раз в строке встретились `F`, `W` и `E`.
 # 
 # Такое представление уже позволяет классическим моделям видеть не просто строку, а её структурные свойства.
-
-# In[1]:
-
-
 import os
 import time
 import numpy as np
@@ -67,17 +58,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score
 
 
-# In[2]:
-
-
 TRAIN_PATH = "train_runes.csv"
 TEST_PATH = "test_runes.csv"
 OUTPUT_PATH = "my_answers.csv"
 REFERENCE_PATH = "answers.csv"
-
-
-# In[3]:
-
 
 train_df = pd.read_csv(TRAIN_PATH)
 test_df = pd.read_csv(TEST_PATH)
@@ -89,14 +73,8 @@ train_df.head()
 
 
 # ## Подготовка признаков
-# 
 # вспомогательные функции, которые превращают строки с рунами в числовое представление.
-# 
 # общий блок для обоих подходов.
-
-# In[4]:
-
-
 def split_runes(series: pd.Series) -> pd.DataFrame:
     arr = series.astype(str).apply(list).tolist()
     return pd.DataFrame(arr, columns=[f"pos_{i}" for i in range(5)])
@@ -196,15 +174,10 @@ def evaluate_with_reference(pred_df: pd.DataFrame, reference_path: str):
         print(errors[["rune", "spell_pred", "spell_true"]].to_string(index=False))
 
 
-# In[5]:
-
-
 X_train, encoder = build_features_fit(train_df["rune"])
 X_test = build_features_transform(test_df["rune"], encoder)
 y = train_df["spell"].astype(int).to_numpy()
 
-print("Размер train:", X_train.shape)
-print("Размер test :", X_test.shape)
 
 
 # ## Подход 1. Ансамбль моделей
@@ -223,10 +196,6 @@ print("Размер test :", X_test.shape)
 # Идея в том, что разные модели могут ошибаться на разных объектах, а ансамбль способен сгладить часть ошибок.
 # 
 # Однако именно на этой задаче даже сильный ансамбль может застревать около 95-97 баллов.
-
-# In[ ]:
-
-
 gb = GradientBoostingClassifier(
     n_estimators=200,
     learning_rate=0.05,
@@ -266,20 +235,14 @@ cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 
 
 # ## Почему здесь полезна кросс-валидация
-# 
 # В этой задаче данных немного, поэтому одной случайной разбивки может быть недостаточно.
 # 
 # `StratifiedKFold` позволяет:
-# 
 # - сохранить баланс классов в каждом фолде;
 # - увидеть, насколько стабильно ведёт себя модель;
 # - сравнить разные алгоритмы более честно.
 # 
 # После этого можно обучить модели на всём train и посмотреть, как они ведут себя на test.
-
-# In[ ]:
-
-
 gb.fit(X_train, y)
 rf.fit(X_train, y)
 svm.fit(X_train, y)
@@ -300,11 +263,8 @@ submission_ens = pd.DataFrame({
 submission_ens.to_csv("answers_ensemble.csv", index=False)
 
 print("Файл сохранён: answers_ensemble.csv")
-submission_ens.head(10)
-
-
-# In[ ]:
-
+print("Shape train:", X_train.shape)
+print("Shape test :", X_test.shape)
 
 uncertainty_df = pd.DataFrame({
     "rune": test_df["rune"],
@@ -315,12 +275,8 @@ uncertainty_df = pd.DataFrame({
     "pred": test_pred_ens,
     "uncertainty": np.abs(p_ens - 0.5)
 }).sort_values("uncertainty", ascending=True)
-
 print("Топ-10 самых неуверенных предсказаний ансамбля:")
 print(uncertainty_df.head(10).to_string(index=False))
-
-
-# In[ ]:
 
 
 disagreement_df = pd.DataFrame({
@@ -338,10 +294,8 @@ disagreement_df["disagreement"] = (
 )
 
 disagreement_df = disagreement_df.sort_values("disagreement", ascending=False)
-
 print("Топ-10 объектов с максимальным расхождением моделей:")
 print(disagreement_df.head(10).to_string(index=False))
-
 
 # ## Что показывает анализ неуверенности
 # 
@@ -362,20 +316,14 @@ print(disagreement_df.head(10).to_string(index=False))
 # 
 # Пропишу, что, если у вас была проблема с 95 и 97 баллами, вероятно, ваши нервы попортили последовательности WFWFW и FFWFW. Теперь попробуйте используя код выше объяснить себе - как именно они были выявлены.
 
-# In[ ]:
-
-
 evaluate_with_reference(submission_ens, REFERENCE_PATH)
 
 
-# ## Подход 2. SVM с подбором гиперпараметров
-# 
+# Подход 2. SVM с подбором гиперпараметров
 # Второй вариант - использовать метод опорных векторов и подобрать его параметры с помощью `GridSearchCV`.
-# 
 # На практике именно этот подход оказался особенно сильным для данной задачи.
 # 
 # Почему это может происходить:
-# 
 # - признаков немного;
 # - структура признаков аккуратная и компактная;
 # - задача напоминает классификацию в хорошо определённом признаковом пространстве;
@@ -384,9 +332,6 @@ evaluate_with_reference(submission_ens, REFERENCE_PATH)
 # Здесь мы перебираем 20 кандидатов:
 # - 4 варианта для линейного ядра;
 # - 16 вариантов для RBF-ядра.
-
-# In[6]:
-
 
 start_total = time.time()
 
@@ -423,10 +368,6 @@ grid = GridSearchCV(
     verbose=1
 )
 
-
-# In[7]:
-
-
 start_search = time.time()
 grid.fit(X_train, y)
 end_search = time.time()
@@ -434,19 +375,15 @@ end_search = time.time()
 print("\n=== Результат GridSearch ===")
 print("Best params :", grid.best_params_)
 print("Best CV acc :", grid.best_score_)
-print(f"Время поиска: {end_search - start_search:.2f} сек")
+print(f"Время поиска: {end_search - start_search:.3f} сек")
 
 
 # ## Почему поиск делается без `probability=True`
-# 
 # Во время перебора параметров важно не тратить лишнее время.
-# 
-# Опция `probability=True` у `SVC` делает обучение заметно тяжелее, потому что дополнительно оцениваются вероятности.
-# 
-# Поэтому в `GridSearchCV` удобнее сначала искать лучшие параметры без вероятностей, а уже после этого обучить финальную модель с теми же параметрами, но с `probability=True`.
-
-# In[8]:
-
+# Опция `probability=True` у `SVC` делает обучение заметно тяжелее,
+# потому что дополнительно оцениваются вероятности.
+# Поэтому в `GridSearchCV` удобнее сначала искать лучшие параметры без вероятностей,
+# а уже после этого обучить финальную модель с теми же параметрами, но с `probability=True`.
 
 best_params = grid.best_params_
 best_kernel = best_params["svc__kernel"]
@@ -466,18 +403,11 @@ svm_final = Pipeline([
 ])
 
 
-# In[9]:
-
-
 start_final = time.time()
 svm_final.fit(X_train, y)
 end_final = time.time()
 
-print(f"Время финального fit: {end_final - start_final:.2f} сек")
-
-
-# In[10]:
-
+print(f"Время финального fit: {end_final - start_final:.3f} сек")
 
 test_proba = svm_final.predict_proba(X_test)[:, 1]
 test_pred_svm = (test_proba >= 0.5).astype(int)
@@ -489,44 +419,23 @@ submission_svm = pd.DataFrame({
 
 submission_svm.to_csv(OUTPUT_PATH, index=False)
 
-print(f"Файл сохранён: {OUTPUT_PATH}")
-submission_svm.head(10)
+##print(f"Файл сохранён: {OUTPUT_PATH}")
+#submission_svm.head(10)
+
+#debug_df = pd.DataFrame({
+#    "rune": test_df["rune"],
+#    "proba_1": test_proba,
+#    "pred": test_pred_svm,
+#    "uncertainty": np.abs(test_proba - 0.5)
+#}).sort_values("uncertainty", ascending=True)
+#print("Топ-10 самых неуверенных предсказаний SVM:")
+#print(debug_df.head(10).to_string(index=False))
+
+#evaluate_with_reference(submission_svm, REFERENCE_PATH)
+print(f"\nОбщее время скрипта: {time.time() - start_total:.3f} сек")
 
 
-# In[11]:
-
-
-debug_df = pd.DataFrame({
-    "rune": test_df["rune"],
-    "proba_1": test_proba,
-    "pred": test_pred_svm,
-    "uncertainty": np.abs(test_proba - 0.5)
-}).sort_values("uncertainty", ascending=True)
-
-print("Топ-10 самых неуверенных предсказаний SVM:")
-print(debug_df.head(10).to_string(index=False))
-
-
-# In[12]:
-
-
-evaluate_with_reference(submission_svm, REFERENCE_PATH)
-print(f"\nОбщее время скрипта: {time.time() - start_total:.2f} сек")
-
-
-# ## Сравнение двух подходов
-# 
-# ### Ансамбль
-# Плюсы:
-# - сильный baseline;
-# - позволяет анализировать неуверенные и спорные объекты;
-# - хорошо показывает, как разные модели видят задачу.
-# 
-# Минусы:
-# - может не добить до 100 баллов автоматически;
-# - чувствителен к тонким закономерностям, которые не всегда легко уловить деревьями.
-# 
-# ### SVM
+# SVM
 # Плюсы:
 # - для этой задачи может давать идеальный результат;
 # - хорошо работает на компактных и информативных признаках;
@@ -539,13 +448,11 @@ print(f"\nОбщее время скрипта: {time.time() - start_total:.2f} 
 # ## Итоговый вывод
 # 
 # Эта задача интересна тем, что нарушает популярный стереотип:
+# > современные ансамбли деревьев лучше классических методов.
 # 
-# > более современные и популярные ансамбли деревьев не всегда лучше классических методов.
 # 
 # На структурированных коротких строках с хорошими признаками SVM способен показывать отличный результат и даже выигрывать у более “модных” подходов.
-# 
 # При этом ансамбль тоже остаётся полезным:
-# 
 # - как сильный baseline;
 # - как инструмент для анализа неуверенных объектов;
 # - как способ понять, где именно задача остаётся сложной.
