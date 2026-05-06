@@ -1,6 +1,10 @@
 # Yandex Agents Week
 
-[April 6-10, 2026](https://shad.yandex.ru/agentsweek)
+* [qualification contest (отбор) March 16 - April 10](entry/)
+* [April 6-10, 2026](https://shad.yandex.ru/agentsweek)
+* [final contest (итоговое задание) April 10-24](final/)
+
+## Lectures and code walkthroughs
 
 * Day 1 **Zaytseva Alena**, AI Lead at Yandex Lavka
   * [YT - Lecture 1.1: Intro to AI Agents, LLM](https://www.youtube.com/live/C1OCgbONSAw)
