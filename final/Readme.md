@@ -1,4 +1,8 @@
-[All "problems" index](https://new.contest.yandex.ru/contests/90998/problems)
+# Final challenge
+
+To [submit **before 2026-04-24 23:59 +0300**](https://new.contest.yandex.ru/contests/90998/start)
+
+See [contest.yandex.ru](https://new.contest.yandex.ru/contests/90998/problems)
 
 ## Agents Week Jupyter 1-3
 
