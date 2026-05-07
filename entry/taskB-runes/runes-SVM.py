@@ -46,6 +46,12 @@ import time
 import numpy as np
 import pandas as pd
 
+try:
+    from sklearnex import patch_sklearn
+    patch_sklearn()
+except ImportError:
+    pass
+
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.model_selection import StratifiedKFold, GridSearchCV
 from sklearn.svm import SVC

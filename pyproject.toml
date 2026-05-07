@@ -1,0 +1,33 @@
+[project]
+name = "yageweek"
+version = "0.1.0"
+description = "AgentsWeek task solutions; iap env on urz-win (Pixi-managed)"
+requires-python = ">=3.14"
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["win-64"]
+
+[tool.pixi.activation.env]
+PYTHONUTF8 = "1"
+
+[tool.pixi.feature.iap.dependencies]
+python = "3.14.*"
+mkl = "*"
+libblas = { version = "*", build = "*mkl" }
+libcblas = { version = "*", build = "*mkl" }
+liblapack = { version = "*", build = "*mkl" }
+numpy = "*"
+scipy = "*"
+scikit-learn = "*"
+scikit-learn-intelex = "*"
+pandas = "*"
+joblib = "*"
+matplotlib = "*"
+plotly = "*"
+catboost = "*"
+jupyter = "*"
+ipykernel = "*"
+
+[tool.pixi.environments]
+iap = ["iap"]

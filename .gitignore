@@ -1,2 +1,6 @@
 __pycache__/
 .ipynb_checkpoints/
+
+# Pixi env (rebuilt by `pixi install`; pixi.lock is the reproducible artifact)
+/.pixi/
+/.claude/
