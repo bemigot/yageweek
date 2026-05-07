@@ -618,6 +618,24 @@ pixi run -e iap python entry\taskB-runes\runes-SVM.py     # uses the env
 pixi shell -e iap                                          # interactive activation
 ```
 
+### Activation modes (analogs of `conda activate`)
+
+Three ways to put commands inside a pixi env, in increasing order of "stickiness":
+
+| Mode | What it does | Closest conda analog |
+|---|---|---|
+| `pixi run -e <env> <cmd>` | Runs one command inside the env; current shell unchanged | `conda run -n <env> <cmd>` |
+| `pixi shell -e <env>` | Spawns a new `$SHELL` with the env active; `exit` returns | `conda activate <env>` + `conda deactivate`, bracketed by a shell process |
+| `eval "$(pixi shell-hook -e <env>)"` | Mutates the **current** shell — sets PATH, env vars, any `[tool.pixi.activation.env]` keys (e.g. `PYTHONUTF8=1`) | `conda activate <env>` proper |
+
+There's no `pixi deactivate`. Pixi's design steers you to the sub-shell
+pattern — interactive work in `pixi shell`, one-offs in `pixi run`, and
+`shell-hook` only when activation has to happen inside the current shell
+(a CI step, a sourced dotfile, a script that can't spawn a sub-shell).
+To "deactivate" after `shell-hook`, open a new shell.
+
+On Windows PowerShell the form is `pixi shell-hook -e iap | Out-String | Invoke-Expression`.
+
 ### Pinning MKL (mandatory, not optional)
 
 `mkl = "*"` alone gets the MKL runtime DLLs into the env but **does not**
@@ -710,6 +728,149 @@ Different model from Linux, where `intel-opencl-rt` came in via the env.
   (same rule as uv-vs-conda on Linux, see [Choosing conda vs uv on urz](#choosing-conda-vs-uv-on-urz)).
 - Pixi on `urz-win` has no effect on the Linux boot's `~/.conda` or
   `~/.local/bin/uv`; the two file systems don't see each other.
+
+## pug: pixi-only replacement plan (hypothetical)
+
+Sketch of what pug's setup would look like if pixi had been the choice from
+day one — no uv ever installed. Drafted 2026-05-07. **Not the live state on
+pug** (which is uv per [Fleet](#fleet)); kept here as a reference for new
+hosts and in case of a future migration. The procedural + detection
+mitigations apply to any setup with an always-on `python3` backed by an env,
+including the current uv recipe — see
+[Always-on libraries in `python3` (scratch venv pattern)](#always-on-libraries-in-python3-scratch-venv-pattern).
+
+### Install pixi
+
+```bash
+curl -fsSL https://pixi.sh/install.sh | bash    # writes ~/.pixi/bin/pixi, edits ~/.bashrc
+exec $SHELL -l
+pixi --version
+```
+
+`/usr/bin/python3` (3.12.3, owned by apt) stays untouched. Pixi only owns `~/.pixi/`.
+
+### Always-on `python3` — pixi global env
+
+Replaces uv's `~/.local/py` scratch venv. Same package list (`requests`).
+
+```bash
+pixi global install \
+  --environment py \
+  --expose python3=python \
+  --expose python=python \
+  python=3.14 \
+  requests
+```
+
+Builds `~/.pixi/envs/py/`, writes activation shims at `~/.pixi/bin/{python,python3}`.
+No wrapper script, no `pyvenv.cfg` symlink trap, no risk of overwriting the
+managed binary (the failure mode flagged in the uv scratch-venv section).
+Add libs later with `pixi global install --environment py <pkg>`.
+
+### Per-project envs
+
+One `pyproject.toml` per project. Pin Python via a feature;
+`pixi install -e <env>` produces `pixi.lock`. Example shape (e.g. `~/i/QM1`):
+
+```toml
+[project]
+name = "qr-maker"
+version = "0.1.0"
+requires-python = ">=3.14"
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[tool.pixi.feature.qm1.dependencies]
+python = "3.14.*"
+segno = "*"
+
+[tool.pixi.environments]
+qm1 = ["qm1"]
+```
+
+Run: `pixi run -e qm1 python script.py`. Commit `pyproject.toml` + `pixi.lock`;
+gitignore `.pixi/`.
+
+PyPI-only deps go under `[tool.pixi.feature.<name>.pypi-dependencies]`.
+Workspace-shaped repos (`~/k/krisp-2025` with `backend`/`frontend` members)
+need a separate per-project sketch — pixi's multi-package model differs from
+uv workspaces; flag when getting there.
+
+### Procedural mitigations
+
+The project env and the global env live at separate paths and don't share
+`site-packages`. The leak — project code imports a lib that's only in the
+global env, project's own `pyproject.toml` doesn't declare it, project ships
+broken — only happens if you bypass pixi and call the global `python3`
+against project code.
+
+- **Always invoke project code through `pixi run -e <env>` or
+  `pixi shell -e <env>`.** Bare `python script.py` from inside a project dir
+  falls through to the global shim and can silently satisfy a missing dep.
+- **VS Code: pin the project interpreter.**
+  `Ctrl+Shift+P → Python: Select Interpreter → .pixi/envs/<env>/bin/python`
+  per project. F5 / debug then route correctly.
+- **Keep the global env minimal.** `requests` and not much else; small surface
+  = small mask. Add to a project, not to global, when in doubt.
+- **Never `pip install` into a pixi-managed env.** Lockfile and reality drift;
+  pixi has no way to recover the manifest from `site-packages`.
+
+These mitigations apply equally to the uv scratch-venv pattern — same leak
+shape, same fixes (substitute `uv run` for `pixi run`).
+
+### Detection mitigations
+
+[`deptry`](https://github.com/fpgmaas/deptry) parses source imports and diffs
+against `pyproject.toml`. Install as a global tool, not a per-project dep:
+
+```bash
+pixi global install --environment dev deptry
+```
+
+Run per project:
+
+```bash
+cd ~/i/QM1
+deptry .
+```
+
+Findings:
+
+- **DEP001** — used but not declared (the leak case)
+- **DEP002** — declared but unused
+- **DEP003** — used as transitive (declared by a dep, not by you)
+
+Wire into `.pre-commit-config.yaml` per project:
+
+```yaml
+- repo: https://github.com/fpgmaas/deptry
+  rev: 0.21.0
+  hooks:
+    - id: deptry
+```
+
+CI (where projects have it): one step that runs `deptry .` on every push.
+A clean CI run becomes a structural promise that the project doesn't lean
+on the global env.
+
+### Tooling layout after the switch
+
+| Thing | Path | Notes |
+|---|---|---|
+| Pixi binary | `~/.pixi/bin/pixi` | `pixi self-update` for upgrades |
+| Global env `py` | `~/.pixi/envs/py/` | Backs `~/.pixi/bin/python3` |
+| Global env `dev` | `~/.pixi/envs/dev/` | Holds `deptry`, future lint/format tools |
+| Per-project envs | `<project>/.pixi/envs/<name>/` | Disposable; `pixi install -e <name>` rebuilds |
+| Package cache | `~/.cache/rattler/` | Shared across all projects |
+| System python3 | `/usr/bin/python3` | Untouched, owned by apt |
+
+### What never exists under this plan
+
+No `~/.local/share/uv/`, no `~/.local/bin/uv`, no `uv.lock` anywhere, no
+`~/.local/py/` scratch project + wrapper script, no `--break-system-packages`.
+One tool, one binary, one lockfile shape per project.
 
 ## TODO / open threads
 
