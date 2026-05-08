@@ -1,7 +1,7 @@
 # Python environments
 
-Personal memo for managing Python environments across my fleet
-(Linux on all hosts; plus Windows 11 on the dual-boot `urz`).
+A memo on managing Python environments on
+**Linux** and **Windows 11** machines. **TODO** macOS on Apple Silicon.
 
 ## uv-first
 
@@ -34,14 +34,20 @@ binary at `~/.local/bin/uv` — no apt involvement, no residue.
 Conda stays only where it earns its keep: urz's Intel-optimized numerics /
 SYCL stack on Iris Xe (see [urz](#urz-conda--intel-channel) section).
 
-[Pixi](https://pixi.sh) replaces both `uv` and `conda` on the Windows boot
-of urz (see [urz-Windows: Pixi](#urz-windows-pixi)). Same conda-forge
-ecosystem plus a PyPI bridge, single Rust binary, single lockfile —
-the role conda plays on Linux urz, with the role uv plays bolted on.
+### **pixi** - ongoing experiment
+
+[Pixi](https://pixi.prefix.dev/latest/concepts/conda_pypi/) can replace both
+`uv` and `conda`. See [urz-Windows story below](#urz-windows-pixi).
+Same conda-forge ecosystem plus a PyPI bridge, single Rust binary,
+single lockfile. See also
+- Modular's recommendation on [pixi](https://docs.modular.com/pixi/)
+- [Switching from conda to pixi - incl. *why*](https://x-zang.github.io/blog/switch-from-conda-to-pixi/)
+- [another *why* - physics.Purdue.edu](https://analysis-facility.physics.purdue.edu/en/latest/guide-conda-to-pixi.html#why-migrate-to-pixi)
+- [2024-02-20 Adopting uv in pixi](https://prefix.dev/blog/uv_in_pixi)
 
 ## Python projects
 
-Notable Python projects across the fleet. "Pin" is `.python-version`;
+Notable Python projects across the author's fleet. "Pin" is `.python-version`;
 "Floor" is `requires-python` in `pyproject.toml`.
 
 | Project | Host | Git | Pin / Floor | Key deps | Notes |
@@ -52,22 +58,22 @@ Notable Python projects across the fleet. "Pin" is `.python-version`;
 | `~/k/krisp-2025` | pug | `github.com:panzim/kb` | `3.13` / — | uv workspace (members: `backend`, `frontend`) | Pkg name `Panzim` |
 | `~/p/let-a-tin` | urz | `github.com:bemigot/let-a-tin` (fork of `github.com:Trim/acme-dns-tiny`) | `3.14` / `>=3.12` | `python-dotenv` + stdlib | ACME DNS-01 client. Local branch `t0`. |
 | `~/k/a1py` | urz | `github.com:mz0/a1py` | `3.14` / `>=3.13` | `fastapi`, `uvicorn`, `httpx`, `itsdangerous`, `python-dotenv` | FastAPI sandbox. |
-| `C:\e\yageweek` | urz-win | — (local) | `3.14` / `>=3.14` | `numpy`, `scipy`, `scikit-learn`, `scikit-learn-intelex`, `pandas`, `joblib`, `mkl`, `matplotlib`, `plotly`, `catboost`, `jupyter` | AgentsWeek task solutions; **Pixi**-managed `iap` env (see [urz-Windows](#urz-windows-pixi)). |
+| `C:\e\yageweek` | wig | — (local) | `3.14` / `>=3.14` | `numpy`, `scipy`, `scikit-learn`, `scikit-learn-intelex`, `pandas`, `joblib`, `mkl`, `matplotlib`, `plotly`, `catboost`, `jupyter` | AgentsWeek task solutions; (see [urz-Windows](#urz-windows-pixi)). |
 
 ## Fleet
 
 | Host | Role | Arch / OS | Kernel | System `python3` | uv |
 |---|---|---|---|---|---|
 | `pug` | Desktop dev box            | x86_64 / Ubuntu 24.04 noble | 6.17 | 3.12 | 0.11.7 |
-| `urz` | Laptop, Intel Iris Xe iGPU (Linux boot)   | x86_64 / Ubuntu 24.04 noble | 6.17 | 3.12 | 0.11.7 |
-| `urz-win` | Same hardware, Windows boot          | x86_64 / Windows 11 Pro | NT 10.0.26200 | — | — (Pixi) |
+| `urz` | Laptop, 1135G7 (Linux)  | x86_64 / Ubuntu 24.04 noble | 6.17 | 3.12 | 0.11.7 |
+| `wig` | Laptop, 1135G7 (Windows) | x86_64 / Windows 11 Pro | NT 10.0.26200 | — | — (Pixi) |
 
 Per-host assessment:
 
 - **`pug`** — primary workstation. `uv` at `~/.local/bin/uv`.
 - **`urz`** — system-wide conda at `/opt/conda` (root-owned, base read-only) retained only for Intel-optimized numerics / SYCL on Iris Xe.
   Deep-dive in [urz: conda + Intel channel](#urz-conda--intel-channel) below.
-- **`urz-win`** — same laptop, Windows 11 boot. No conda, no uv. Single tool: **Pixi**, with one project-local `iap` env covering general data-science / ML work.
+- **`wig`** — same laptop, Windows 11 boot. **Pixi** unifying aproach tryout.
   Deep-dive in [urz-Windows: Pixi](#urz-windows-pixi) below.
 
 Parity rules across the fleet:
@@ -97,8 +103,8 @@ export PATH="$HOME/.local/bin:$PATH"
 | `uv` | `~/.local/bin/uv` | 0.11.7 on `pug` and `urz` (2026-04-21). |
 | System `python3` | `/usr/bin/python3` | 3.12.3 on Ubuntu 24.04 boxes. Don't pip into it. |
 | uv-managed Pythons | `~/.local/share/uv/python/cpython-X.Y.Z-linux-<arch>-gnu/` | Installed lazily by `uv sync` / `uv python install` |
-| Conda (`urz` Linux only) | `/opt/conda` | System-wide, root-owned, `base` is read-only — see "urz" section below |
-| Pixi (`urz-win` only) | `%USERPROFILE%\.pixi\bin\pixi.exe` | Installed via `winget install prefix-dev.pixi`; replaces both uv and conda on the Windows boot |
+| Conda (`urz`) | `/opt/conda` | System-wide, root-owned, `base` is read-only — see "urz" section below |
+| Pixi (`wig`) | `%USERPROFILE%\.pixi\bin\pixi.exe` | Installed via `winget install prefix-dev.pixi` |
 
 Upgrade uv itself: [`uv self update`](https://docs.astral.sh/uv/reference/cli/#uv-self-update) (binary self-update; no apt involvement).
 
@@ -402,7 +408,7 @@ GPU/SYCL accelerators and oneAPI compiler runtimes remain:
 `intelpython3_full` and the MKL meta-packages aren't reachable anymore.
 Don't `conda env remove -n idp` and expect to recreate it the same way.
 
-**The new recipe** (for both Linux urz and Windows urz-win):
+**The new recipe** (for both Linux urz and Windows wig):
 
 - `conda-forge` for the Python ecosystem (numpy, scipy, scikit-learn, pandas, …).
   conda-forge ships MKL-linked NumPy/SciPy when the `mkl` package is in the env.
@@ -528,8 +534,6 @@ project's `pixi.lock` lives apart from any Linux uv lock. Don't try to share.
 Naming note: the Windows env is `iap`, deliberately distinct from the
 Linux env `idp` (whose name came from "Intel Distribution for Python",
 now historical — see [Intel channel reality](#intel-channel-reality-as-of-2026-05-07)).
-When the memo says `idp`, it's the Linux conda env; `iap` is always the
-urz-win Pixi env.
 
 ### MKL: when is it worth pinning?
 
@@ -577,7 +581,7 @@ Trade-off: every Pixi command needs `-e iap`.
 [project]
 name = "yageweek"
 version = "0.1.0"
-description = "AgentsWeek task solutions; iap env on urz-win (Pixi-managed)"
+description = "AgentsWeek task solutions"
 requires-python = ">=3.14"
 
 [tool.pixi.workspace]
@@ -700,8 +704,8 @@ dpnp = "*"
 dpctl = "*"
 ```
 
-The Iris Xe compute runtime on Windows comes from the **Intel Graphics
-Driver** (or the oneAPI Base Toolkit) — system-installed, not via Pixi.
+The Iris Xe compute runtime on Windows comes from the **Intel Graphics Driver**
+(or the oneAPI Base Toolkit) — system-installed, not via Pixi.
 Different model from Linux, where `intel-opencl-rt` came in via the env.
 
 ### VS Code
@@ -726,24 +730,13 @@ Different model from Linux, where `intel-opencl-rt` came in via the env.
 
 - Don't manage a project with both Pixi and uv — pick one per project
   (same rule as uv-vs-conda on Linux, see [Choosing conda vs uv on urz](#choosing-conda-vs-uv-on-urz)).
-- Pixi on `urz-win` has no effect on the Linux boot's `~/.conda` or
-  `~/.local/bin/uv`; the two file systems don't see each other.
 
-## pug: pixi-only replacement plan (hypothetical)
-
-Sketch of what pug's setup would look like if pixi had been the choice from
-day one — no uv ever installed. Drafted 2026-05-07. **Not the live state on
-pug** (which is uv per [Fleet](#fleet)); kept here as a reference for new
-hosts and in case of a future migration. The procedural + detection
-mitigations apply to any setup with an always-on `python3` backed by an env,
-including the current uv recipe — see
-[Always-on libraries in `python3` (scratch venv pattern)](#always-on-libraries-in-python3-scratch-venv-pattern).
+## pug: uv -> pixi migration plan
 
 ### Install pixi
 
 ```bash
-curl -fsSL https://pixi.sh/install.sh | bash    # writes ~/.pixi/bin/pixi, edits ~/.bashrc
-exec $SHELL -l
+# suggest mise alternative for ease of updates
 pixi --version
 ```
 
@@ -888,14 +881,11 @@ One tool, one binary, one lockfile shape per project.
    6 2025-09-19 14:21:02 +0400 /opt/conda/envs/
   17 2025-09-19 14:20:59 +0400 /opt/conda/x86_64-conda-linux-gnu/
   ```
-- ~~Bootstrap `urz-win`~~ **done 2026-05-07**: Pixi 0.66.0 installed via winget,
+- ~~Bootstrap `wig`~~ **done 2026-05-07**: Pixi 0.66.0 installed via winget,
   `iap` env solved and built (`.pixi\envs\iap\`) with MKL-backed NumPy
-  (verified `mkl_avx512.2.dll` loads on Tiger Lake),
-  `entry\taskB-runes\runes-SVM.py` smoke-tested — 100 fits in 0.5 s,
-  99.4% CV acc, predictions match the reference `answers.csv`.
-- ~~Opt `runes-SVM.py` into `sklearnex.patch_sklearn()`~~ **done** — guarded
-  with `try/except ImportError` so the script still runs on stock sklearn.
+  (verified `mkl_avx512.2.dll` loads on Tiger Lake).
 - The Linux `idp` recipe in this memo is now historical — `intelpython3_full`
-  isn't reachable from a fresh install. If urz-Linux's `idp` ever needs
-  rebuilding, port it to the same conda-forge + `mkl` + `scikit-learn-intelex`
-  recipe that urz-win uses (with `dpnp`/`dpctl` from the Intel channel).
+  isn't reachable from a fresh install. (?? is it true?).
+  If urz-Linux's `idp` ever needs rebuilding, port it to the same
+  conda-forge + `mkl` + `scikit-learn-intelex` recipe
+  that wig uses (with `dpnp`/`dpctl` from the Intel channel).

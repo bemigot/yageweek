@@ -1,7 +1,7 @@
 [project]
 name = "yageweek"
 version = "0.1.0"
-description = "AgentsWeek task solutions; iap env on urz-win (Pixi-managed)"
+description = "AgentsWeek task solutions"
 requires-python = ">=3.14"
 
 [tool.pixi.workspace]
