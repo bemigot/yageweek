@@ -12,7 +12,7 @@ In this task "rune" is a sequence of symbols:
 **Output** answers.csv - test_runes + predictions (column `spell`, where 1 - valid spell)
 
 ## Try 1: 1-hidden-layer net — scored 93 pts (3 false negatives found in retrospect)
-- Input: one-hot encode each position → 15 input neurons (5 positions × 3 symbols)
+- Input: one-hot encode each position → 15 input neurons (5 positions × 3 symbols) - 
 - Architecture: `[15 → 5 → 1]` — fully connected hidden layer with ReLU, sigmoid output
 - Train on all 170 labeled runes (no internal split) — dataset is too small to waste samples on validation
 - NumPy only; modelled on [`example/deep.py`](example/deep.py) and [`example/dnn_app_utils_v3.py`](example/dnn_app_utils_v3.py)
@@ -32,6 +32,8 @@ In this task "rune" is a sequence of symbols:
 | i5-1135G7 2.4-4.2 GHz / --------------- / Python 3.12 - NumPy 2.4.4 (PyPi) |  3.196s /  3.492s |
 | i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / Python 3.12 - NumPy 2.3.2  [idp] |  4.309s / 15.676s |
 | i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / Python 3.12 - scikit-learn [idp] |  2.054s /  2.152s |
+| i5-1135G7 2.4-4.2 GHz / MKL AVX-512    / Python 3.14 - NumPy 2.4.3   [iap] |  5.514s / 14.625s |
+| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / Python 3.14 - scikit-learn [iap] |  1.979s /  1.859s |
 
 [idp](https://www.intel.com/content/www/us/en/developer/articles/technical/get-started-with-intel-distribution-for-python.html)
 ```
@@ -42,6 +44,16 @@ numpy                        2.3.2    https://software.repos.intel.com/python/co
 scikit-learn                 1.8.0    conda-forge
 scikit-learn-intelex         2025.9.0 https://software.repos.intel.com/python/conda
 scipy                        1.16.3   https://software.repos.intel.com/python/conda
+```
+[iap](../../python-env.md#iap-env-project-local-python-314)
+```
+which python  # .pixi/envs/iap/python.exe
+python -V     # Python 3.14.4
+
+numpy                        2.4.3     conda-forge
+scikit-learn                 1.8.0     conda-forge
+scikit-learn-intelex         2025.11.0 conda-forge
+scipy                        1.17.1    conda-forge   # transitive
 ```
 
 ## Try 3: Rule extraction experiment
@@ -83,3 +95,23 @@ seed=1).
 | ----------------------------------------------------------- | --------------- |
 | i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / idp / `51-15-5-1` | 2.054s / 2.152s |
 | i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / idp / `36-5-1`    | 1.636s / 1.783s |
+| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / iap / `36-5-1`    | 1.983s / 1.219s |
+
+
+## SVN is the winner
+
+[Evgeniy Korovin published](https://github.com/EvgeniyKorovin1/AgentsWeek-TaskSolutions)
+an SVM solution and a comparative analysis [local copy](runes-SVM.ipynb). [This SVM](runes-SVM.py) beats
+my minimal net:
+
+| Env / scikit-learn / net                                    | Time real min/avg/max     |
+| ----------------------------------------------------------- | ------------------------- |
+| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / idp / `36-5-1`    | 1.636s /  n/a  /  n/a     |
+| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / idp / `EK SVM`    | 0.6-0.9s?? /  n/a /  n/a  |
+| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / iap / `36-5-1`    | 1.987s / 2.069s / 2.224s  |
+| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / iap / `EK SVM`    | 2.428s / 2.551s / 2.749s  |
+
+> **Caveat — the iap rows are not yet apples-to-apples with the original "SVM ~2× faster" observation:**
+> - The original observation was on **idp/Linux** with `runes-SVM.py` **un-patched** (commit `2fe8d1a` later added `patch_sklearn()`, which adds ~0.5s of import-time overhead on Windows).
+> - On iap/Windows, external wall is dominated by preamble (~1.6s import + `patch_sklearn` + CSV read + feature engineering); algorithmic work is genuinely ~0.5s for SVM (`Время поиска` + final fit) vs ~1s for minimal net (5000-iter MLP fit), so SVM still wins on the algorithm axis.
+> - **TODO:** re-measure SVM on idp/Linux (and on a future pixi-managed Linux env) with the current patched script for a fair comparison.

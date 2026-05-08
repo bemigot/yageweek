@@ -158,7 +158,7 @@ static. ~99% drop-in, but a handful of native extensions that probe system
 OpenSSL / libc paths can behave slightly differently from Ubuntu's
 `python3-*` apt packages. Rare; flag if it bites.
 
-### Package installation — the pip replacement story
+### Package installation: the pip replacement story
 
 Three layers, pick by use case:
 
@@ -562,7 +562,7 @@ Self-update later: `pixi self-update` or `winget upgrade prefix-dev.pixi`.
 | Per-project env | `<project>\.pixi\envs\default\` | Created by `pixi install` |
 | Package cache | `%LOCALAPPDATA%\rattler\cache\` | Shared across projects |
 
-### `iap` env — project-local, Python 3.14
+### `iap` env: project-local, Python 3.14
 
 Single env for all data-science / ML tasks under `C:\e\yageweek`.
 Lives in the repo so the lockfile travels with code (rule from
@@ -749,7 +749,7 @@ pixi --version
 
 `/usr/bin/python3` (3.12.3, owned by apt) stays untouched. Pixi only owns `~/.pixi/`.
 
-### Always-on `python3` — pixi global env
+### Always-on `python3`: pixi global env
 
 Replaces uv's `~/.local/py` scratch venv. Same package list (`requests`).
 
