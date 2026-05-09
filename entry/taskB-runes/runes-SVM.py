@@ -107,7 +107,7 @@ y = train_df["spell"].astype(int).to_numpy()
 - 16 вариантов для RBF-ядра.
 '''
 
-start_total = time.time()
+start_ann = time.time()
 
 svm_search = Pipeline([
     ("scaler", StandardScaler()),
@@ -194,7 +194,7 @@ submission_svm = pd.DataFrame({
 })
 
 submission_svm.to_csv(OUTPUT_PATH, index=False)
-print(f"\nAll dome: {time.time() - start_total:.3f} сек")
+print(f"\nAll dome: {time.time() - start_ann:.3f} сек")
 
 debug_df = pd.DataFrame({
     "rune": test_df["rune"],

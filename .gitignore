@@ -3,4 +3,6 @@ __pycache__/
 
 # Pixi env (rebuilt by `pixi install`; pixi.lock is the reproducible artifact)
 /.pixi/
+
 /.claude/
+.vscode/

@@ -1,15 +1,10 @@
 #!/usr/bin/env python3
-"""Rune spell detector — minimal accurate net per Try 4 sweep.
+"""Rune spell detector - scikit-learn edition.
 
 Architecture: [36 → 5 → 1]  (MLPClassifier, hidden_layer_sizes=(5,))
-Features: 36 consecutive-bigram one-hot only (no positional features).
+Features: 36 consecutive-bigram one-hot.
 """
-try:
-    from sklearnex import patch_sklearn
-    patch_sklearn()
-except ImportError:
-    pass
-
+import time
 import numpy as np
 from sklearn.neural_network import MLPClassifier
 
@@ -34,8 +29,9 @@ m = len(y_train)
 n_spell = int(y_train.sum())
 print(f"Training on {m} runes  ({n_spell} spells, {m - n_spell} non-spells)")
 print(f"Input features: {X_train.shape[1]}  (36 bigram only)")
+start_ann = time.time()
 
-# --- build model matching [36 → 5 → 1] ---
+# --- build model ---
 clf = MLPClassifier(
     hidden_layer_sizes=(5,),
     activation='relu',
@@ -45,8 +41,7 @@ clf = MLPClassifier(
     random_state=1,
     verbose=False,
 )
-print(f"Architecture: [36 → 5 → 1]  (hidden_layer_sizes={clf.hidden_layer_sizes})")
-print()
+print(f"Architecture: [36 → 5 → 1]  (hidden_layer_sizes={clf.hidden_layer_sizes})\n")
 
 clf.fit(X_train, y_train)
 
@@ -71,6 +66,7 @@ print(f"answers.csv accuracy: {ans_acc:.1%}  ({int((y_ans_pred == y_ans_true).su
 
 # --- predict on test_runes.csv ---
 y_test_pred = clf.predict(X_test)
+print(f"\nAll dome: {time.time() - start_ann:.3f} s")
 print(f"\nTest predictions (test_runes.csv):")
 for name, pred in zip(test_names, y_test_pred):
     print(f"  {name}: {pred}")

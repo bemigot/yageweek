@@ -26,7 +26,7 @@ n_spell = int(y_train.sum())
 print(f"Training on {m} runes  ({n_spell} spells, {m - n_spell} non-spells)")
 print(f"Input features: {X_train.shape[1]}  (15 positional + 36 bigram)")
 
-# --- build model matching [51 → 15 → 5 → 1] ---
+# --- build model ---
 clf = MLPClassifier(
     hidden_layer_sizes=(15, 5),
     activation='relu',
@@ -36,8 +36,7 @@ clf = MLPClassifier(
     random_state=1,
     verbose=False,
 )
-print(f"Architecture: [51 → 15 → 5 → 1]  (hidden_layer_sizes={clf.hidden_layer_sizes})")
-print()
+print(f"Architecture: [51 → 15 → 5 → 1]  (hidden_layer_sizes={clf.hidden_layer_sizes})\n")
 
 clf.fit(X_train, y_train)
 
