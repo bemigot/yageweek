@@ -23,7 +23,7 @@ In this task "rune" is a sequence of symbols:
 - Architecture: `[51 → 15 → 5 → 1]`
 - 20× smaller learning rate, 6× more iterations
 - Correctly classified the 3 runes Try 1 missed (false negatives); 100% on 73-sample test set
-- [`runes-kit.py`](runes-kit.py) — same architecture reimplemented with `scikit-learn`
+- [`runes-kit-51.py`](runes-kit-51.py) — same architecture reimplemented with `scikit-learn`
 
 | Env                                                                        | Time real/user    |
 |----------------------------------------------------------------------------|-------------------|
@@ -32,7 +32,8 @@ In this task "rune" is a sequence of symbols:
 | i5-1135G7 2.4-4.2 GHz / --------------- / Python 3.12 - NumPy 2.4.4 (PyPi) |  3.196s /  3.492s |
 | i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / Python 3.12 - NumPy 2.3.2  [idp] |  4.309s / 15.676s |
 | i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / Python 3.12 - scikit-learn [idp] |  2.054s /  2.152s |
-| i5-1135G7 2.4-4.2 GHz / MKL AVX-512    / Python 3.14 - NumPy 2.4.3   [iap] |  5.514s / 14.625s |
+| -------------------------------------------------------------------------- |                   |
+| i5-1135G7 2.4-4.2 GHz / MKL AVX-512     / Python 3.14 - NumPy 2.4.3  [iap] |  5.514s / 14.625s |
 | i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / Python 3.14 - scikit-learn [iap] |  1.979s /  1.859s |
 
 [idp](https://www.intel.com/content/www/us/en/developer/articles/technical/get-started-with-intel-distribution-for-python.html)
@@ -42,7 +43,6 @@ python -V     # Python 3.12.12
 
 numpy                        2.3.2    https://software.repos.intel.com/python/conda
 scikit-learn                 1.8.0    conda-forge
-scikit-learn-intelex         2025.9.0 https://software.repos.intel.com/python/conda
 scipy                        1.16.3   https://software.repos.intel.com/python/conda
 ```
 [iap](../../python-env.md#iap-env-project-local-python-314)
@@ -52,7 +52,6 @@ python -V     # Python 3.14.4
 
 numpy                        2.4.3     conda-forge
 scikit-learn                 1.8.0     conda-forge
-scikit-learn-intelex         2025.11.0 conda-forge
 scipy                        1.17.1    conda-forge   # transitive
 ```
 
@@ -93,12 +92,12 @@ seed=1).
 
 | Env / scikit-learn / net                                    | Time real/user  |
 | ----------------------------------------------------------- | --------------- |
-| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / idp / `51-15-5-1` | 2.054s / 2.152s |
-| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / idp / `36-5-1`    | 1.636s / 1.783s |
-| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / iap / `36-5-1`    | 1.983s / 1.219s |
+| i5-1135G7 2.4-4.2 GHz / AVX-512         / idp / `51-15-5-1` | 0.744s / 1.100s |
+| i5-1135G7 2.4-4.2 GHz / AVX-512         / idp / `36-5-1`    |  ??    /  ??    |
+| i5-1135G7 2.4-4.2 GHz / AVX-512         / iap / `36-5-1`    | 1.983s / 1.219s |
 
 
-## SVN is the winner
+## Is SVM the winner?
 
 [Evgeniy Korovin published](https://github.com/EvgeniyKorovin1/AgentsWeek-TaskSolutions)
 an SVM solution and a comparative analysis [local copy](runes-SVM.ipynb). [This SVM](runes-SVM.py) beats
@@ -106,8 +105,9 @@ my minimal net:
 
 | Env / scikit-learn / net                                    | Time real min/avg/max     |
 | ----------------------------------------------------------- | ------------------------- |
-| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / idp / `36-5-1`    | 1.636s /  n/a  /  n/a     |
-| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / idp / `EK SVM`    | 0.6-0.9s?? /  n/a /  n/a  |
+| i5-1135G7 2.4-4.2 GHz / AVX-512         / idp / `51-15-5-1` | 0.975s /  ??  /  ??       |
+| i5-1135G7 2.4-4.2 GHz / AVX-512         / idp / `36-5-1`    |  ??    /  ??  /  ??       |
+| i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / idp / `EK SVM`    | 0.987s /  ??  /  ??       |
 | i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / iap / `36-5-1`    | 1.987s / 2.069s / 2.224s  |
 | i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / iap / `EK SVM`    | 2.428s / 2.551s / 2.749s  |
 

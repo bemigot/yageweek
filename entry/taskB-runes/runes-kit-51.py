@@ -1,15 +1,9 @@
 #!/usr/bin/env python3
-"""Rune spell detector — scikit-learn-intelex edition.
+"""Rune spell detector - scikit-learn edition.
 
 Architecture: [51 → 15 → 5 → 1]  (MLPClassifier, hidden_layer_sizes=(15, 5))
 Features: 15 positional one-hot + 36 consecutive-bigram one-hot = 51 total
 """
-try:
-    from sklearnex import patch_sklearn
-    patch_sklearn()
-except ImportError:
-    pass
-
 import numpy as np
 from sklearn.neural_network import MLPClassifier
 

@@ -4,53 +4,10 @@
 """
 Originally:
 https://github.com/EvgeniyKorovin1/AgentsWeek-TaskSolutions/blob/1974a63162cd9884a794b236c9f529c3e2b58d9e/Tasks/Task_02/Solution_WithExplanation.ipynb
-
-**Магические руны Элдории**
-В этой задаче нужно определить, какие 5-символьные последовательности из символов `F`, `W` и `E` являются валидными заклинаниями.
-
-На первый взгляд задача выглядит простой:
-- алфавит маленький;
-- длина строки фиксирована;
-- объектов немного.
-
-Но именно такие задачи часто оказываются нетривиальными:
-модель должна не просто “видеть буквы”, а уловить скрытые закономерности между их позициями и сочетаниями.
-
-**Почему эта задача вызвала споры**
-
-Во время разбора задачи у участников возникли два лагеря:
-- одни использовали бустинги и получали примерно 95–97 баллов;
-- другие писали, что SVM даёт 100 баллов.
-
-Это хороший пример того, что не существует “всемогущей” модели, которая всегда лучше остальных.
-Для маленькой дискретной задачи с короткими строками и хорошо сконструированными признаками метод опорных векторов может оказаться сильнее популярных ансамблей деревьев.
-
-**Общая идея признаков**
-
-Строка длины 5 сама по себе неудобна для классических моделей машинного обучения, поэтому её нужно превратить в числовое описание.
-
-Здесь используются три группы признаков:
-
-1. **Позиционные one-hot признаки**
-   Для каждой позиции учитывается, какой символ в ней стоит.
-
-2. **Попарные взаимодействия между позициями**
-   Важны не только отдельные символы, но и их комбинации в разных местах строки.
-
-3. **Счётчики символов**
-   Сколько раз в строке встретились `F`, `W` и `E`.
-
-Такое представление позволяет моделям видеть не просто строку, а её структурные свойства.
 """
 import time
 import numpy as np
 import pandas as pd
-
-try:
-    from sklearnex import patch_sklearn
-    patch_sklearn()
-except ImportError:
-    pass
 
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.model_selection import StratifiedKFold, GridSearchCV
@@ -67,8 +24,6 @@ test_df = pd.read_csv(TEST_PATH)
 print("Shape train:", train_df.shape)
 print("Shape test :", test_df.shape)
 
-# ## Подготовка признаков
-# вспомогательные функции, которые превращают строки с рунами в числовое представление.
 def split_runes(series: pd.Series) -> pd.DataFrame:
     arr = series.astype(str).apply(list).tolist()
     return pd.DataFrame(arr, columns=[f"pos_{i}" for i in range(5)])
@@ -137,14 +92,10 @@ X_train, encoder = build_features_fit(train_df["rune"])
 X_test = build_features_transform(test_df["rune"], encoder)
 y = train_df["spell"].astype(int).to_numpy()
 
-#print("Shape train:", X_train.shape)
-#print("Shape test :", X_test.shape)
-
 '''
 Подход 2. SVM с подбором гиперпараметров
-Второй вариант - использовать метод опорных векторов и подобрать его параметры с помощью `GridSearchCV`.
-На практике именно этот подход оказался особенно сильным для данной задачи.
 
+этот подход оказался особенно сильным для данной задачи.
 Почему это может происходить:
 - признаков немного;
 - структура признаков аккуратная и компактная;
@@ -232,7 +183,7 @@ start_final = time.time()
 svm_final.fit(X_train, y)
 end_final = time.time()
 
-print(f"Время финального fit: {end_final - start_final:.3f} сек")
+print(f"Final fit: {end_final - start_final:.3f} сек")
 
 test_proba = svm_final.predict_proba(X_test)[:, 1]
 test_pred_svm = (test_proba >= 0.5).astype(int)
@@ -243,7 +194,7 @@ submission_svm = pd.DataFrame({
 })
 
 submission_svm.to_csv(OUTPUT_PATH, index=False)
-print(f"\nОбщее время скрипта: {time.time() - start_total:.3f} сек")
+print(f"\nAll dome: {time.time() - start_total:.3f} сек")
 
 debug_df = pd.DataFrame({
     "rune": test_df["rune"],
@@ -257,12 +208,12 @@ print(debug_df.head(10).to_string(index=False))
 '''
 SVM
 Плюсы:
-- для этой задачи может давать идеальный результат;
+- может дать 100% результат;
 - хорошо работает на компактных и информативных признаках;
-- подбор параметров оказывается достаточно недорогим.
+- подбор параметров оказывается недорогим.
 
 Минусы:
-- требует более аккуратной настройки;
+- требует аккуратной настройки;
 - нужно понимать влияние ядра, `C` и `gamma`.
 
 ## Выводы
