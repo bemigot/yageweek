@@ -5,6 +5,11 @@ A memo on managing Python environments on
 
 ## uv-first
 
+a word on `pyproject.toml`
+- [PEP 518 -- File specification](https://www.python.org/dev/peps/pep-0518/#specification) - since May 2016
+- Python 3.11 introduced native TOML support - Oct. 2022
+- https://github.com/carlosperate/awesome-pyproject
+
 **Why not pip?**
 
 1. No transactional installs. A conflict discovered late leaves `site-packages/`
@@ -43,6 +48,10 @@ single lockfile. See also
 - Modular's recommendation on [pixi](https://docs.modular.com/pixi/)
 - [Switching from conda to pixi - incl. *why*](https://x-zang.github.io/blog/switch-from-conda-to-pixi/)
 - [another *why* - physics.Purdue.edu](https://analysis-facility.physics.purdue.edu/en/latest/guide-conda-to-pixi.html#why-migrate-to-pixi)
+- [Migrate a conda project to pixi](https://pydevtools.com/handbook/tutorial/migrate-a-conda-project-to-pixi/) -
+  [Tim Hopper, AI research engineer, Spotify](https://github.com/tdhopper)
+- [2025-12-22 Anaconda - Conda + Pixi Quick Start](https://www.anaconda.com/blog/conda-pixi-quick-start-guide-python-environment-management)
+- [2024-03-01 7 Reasons to Switch from Conda to Pixi](https://prefix.dev/blog/pixi_a_fast_conda_alternative)
 - [2024-02-20 Adopting uv in pixi](https://prefix.dev/blog/uv_in_pixi)
 
 ## Python projects
@@ -64,8 +73,8 @@ Notable Python projects across the author's fleet. "Pin" is `.python-version`;
 
 | Host | Role | Arch / OS | Kernel | System `python3` | uv |
 |---|---|---|---|---|---|
-| `pug` | Desktop dev box            | x86_64 / Ubuntu 24.04 noble | 6.17 | 3.12 | 0.11.7 |
-| `urz` | Laptop, 1135G7 (Linux)  | x86_64 / Ubuntu 24.04 noble | 6.17 | 3.12 | 0.11.7 |
+| `pug` | Desktop dev box          | x86_64 / Ubuntu 24.04 noble | 6.17 | 3.12 | 0.11.7 |
+| `urz` | Laptop, 1135G7 (Linux)   | x86_64 / Ubuntu 24.04 noble | 6.17 | 3.12 | 0.11.7 |
 | `wig` | Laptop, 1135G7 (Windows) | x86_64 / Windows 11 Pro | NT 10.0.26200 | — | — (Pixi) |
 
 Per-host assessment:
