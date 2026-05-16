@@ -100,8 +100,8 @@ seed=1).
 ## Is SVM the winner?
 
 [Evgeniy Korovin published](https://github.com/EvgeniyKorovin1/AgentsWeek-TaskSolutions)
-an SVM solution and a comparative analysis [local copy](runes-SVM.ipynb). [This SVM](runes-SVM.py) beats
-my minimal net:
+an SVM solution and a comparative analysis [local copy](runes-SVM.ipynb). [This SVM](runes-SVM.py)
+beats my simple nets neither on time nor on ease of building/training:
 
 | Env / scikit-learn / net                                    | Time real min/avg/max     |
 | ----------------------------------------------------------- | ------------------------- |
@@ -110,8 +110,6 @@ my minimal net:
 | i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / idp / `EK SVM`    | 0.987s /  ??  /  ??       |
 | i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / iap / `36-5-1`    | 1.987s / 2.069s / 2.224s  |
 | i5-1135G7 2.4-4.2 GHz / Iris Xe 1.3 GHz / iap / `EK SVM`    | 2.428s / 2.551s / 2.749s  |
-
-> **Caveat — the iap rows are not yet apples-to-apples with the original "SVM ~2× faster" observation:**
-> - The original observation was on **idp/Linux** with `runes-SVM.py` **un-patched** (commit `2fe8d1a` later added `patch_sklearn()`, which adds ~0.5s of import-time overhead on Windows).
-> - On iap/Windows, external wall is dominated by preamble (~1.6s import + `patch_sklearn` + CSV read + feature engineering); algorithmic work is genuinely ~0.5s for SVM (`Время поиска` + final fit) vs ~1s for minimal net (5000-iter MLP fit), so SVM still wins on the algorithm axis.
-> - **TODO:** re-measure SVM on idp/Linux (and on a future pixi-managed Linux env) with the current patched script for a fair comparison.
+| Ryzen 5 3600 3.6-4.2 GHz / AVX2         / aap / `51-15-5-1` | 1.009s / 1.081s / 1.123s  |
+| Ryzen 5 3600 3.6-4.2 GHz / AVX2         / aap / `36-5-1`    | 1.021s / 1.056s / 1.117s  |
+| Ryzen 5 3600 3.6-4.2 GHz / AVX2         / aap / `EK SVM`    | 1.302s / 1.394s / 1.451s  |

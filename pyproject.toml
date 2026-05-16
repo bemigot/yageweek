@@ -6,10 +6,14 @@ requires-python = ">=3.14"
 
 [tool.pixi.workspace]
 channels = ["conda-forge"]
-platforms = ["win-64"]
+platforms = ["win-64", "linux-64"]
 
 [tool.pixi.activation.env]
 PYTHONUTF8 = "1"
+
+# iap: Intel + MKL, Windows (wig). Tiger Lake i7-1135G7, AVX-512.
+[tool.pixi.feature.iap]
+platforms = ["win-64"]
 
 [tool.pixi.feature.iap.dependencies]
 python = "3.14.*"
@@ -29,5 +33,31 @@ catboost = "*"
 jupyter = "*"
 ipykernel = "*"
 
+# aap: AMD + OpenBLAS, Linux (pug). AVX2, no AVX-512.
+[tool.pixi.feature.aap]
+platforms = ["linux-64"]
+
+[tool.pixi.feature.aap.dependencies]
+python = "3.14.*"
+libblas = { version = "*", build = "*openblas" }
+libcblas = { version = "*", build = "*openblas" }
+liblapack = { version = "*", build = "*openblas" }
+numpy = "*"
+scipy = "*"
+scikit-learn = "*"
+scikit-learn-intelex = "*"
+pandas = "*"
+joblib = "*"
+matplotlib = "*"
+plotly = "*"
+catboost = "*"
+jupyter = "*"
+ipykernel = "*"
+
 [tool.pixi.environments]
 iap = ["iap"]
+aap = ["aap"]
+
+[tool.pyright]
+venvPath = ".pixi/envs"
+venv = "aap"  # swap to "iap" on Windows

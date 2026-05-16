@@ -744,9 +744,11 @@ Different model from Linux, where `intel-opencl-rt` came in via the env.
 
 ### Install pixi
 
+**NB** `mise use -g pixi@latest` - Sigstore error on `latest`, `0.68.1`, `0.68.0`
 ```bash
-# suggest mise alternative for ease of updates
-pixi --version
+curl -fsSL https://pixi.sh/install.sh | bash  # ~/.pixi/bin/pixi, ~/.bashrc
+ln -s ~/.pixi/bin/pixi ~/.local/bin/pixi
+pixi -V  # pixi --version
 ```
 
 `/usr/bin/python3` (3.12.3, owned by apt) stays untouched. Pixi only owns `~/.pixi/`.
