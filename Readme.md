@@ -71,3 +71,6 @@
   * [YT - К. Власов: Production Engineering for LLM Agents. Course summary.](https://www.youtube.com/live/UxgjgvI_wKY)
     * agenda: завершим разговор о внедрении агента в *prod* и подведем итог по теме интенсива.
     * [slides](day5/Agents-in-Prod2.pdf)  - [Yandex Disk](https://disk.yandex.ru/d/N2INXh0naUQcyw)
+
+## Certificate of completion
+[![Zertifikat](zertifikat-thumb.png)](Zertifikat.pdf)
